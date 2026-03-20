@@ -1,6 +1,7 @@
 let log;
 const logs = [];
 const columns = [
+  "iteration",
   "collectionName",
   "requestName",
   "method",
@@ -9,7 +10,9 @@ const columns = [
   "code",
   "responseTime",
   "responseSize",
-  "assertions",
+  "executed",
+  "failed",
+  "skipped",
   "totalAssertions",
 ];
 
@@ -41,14 +44,14 @@ module.exports = function newmanCSVReporter(newman, options) {
 
   newman.on("beforeRequest", (err, e) => {
     if (err || !e.item.name) return;
-    const { item, request } = e;
+    const { cursor, item, request } = e;
 
     Object.assign(log, {
       collectionName: newman.summary.collection.name,
+      iteration: cursor.iteration + 1,
       requestName: item.name,
       method: request.method,
       url: request.url.toString(),
-      assertions: "",
       totalAssertions: 0,
     });
   });
@@ -65,7 +68,11 @@ module.exports = function newmanCSVReporter(newman, options) {
 
   newman.on("assertion", (err, e) => {
     const { assertion } = e;
-    log["assertions"].push(assertion);
+    const key = err ? "failed" : e.skipped ? "skipped" : "executed";
+
+    log[key] = log[key] || [];
+    log[key].push(assertion);
+
     log.totalAssertions++;
   });
 

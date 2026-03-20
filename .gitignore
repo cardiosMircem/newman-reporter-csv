@@ -2,3 +2,4 @@ node_modules
 
 # For development
 newman
+.npmrc
