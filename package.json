@@ -1,0 +1,26 @@
+{
+  "name": "@cardiosmircem/newman-reporter-csv",
+  "version": "2.0.0",
+  "description": "A CSV reporter for Newman customized for me",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cardiosMircem/newman-reporter-csv.git"
+  },
+  "author": {
+    "name": "Mirco Seccardi"
+  },
+  "license": "MIT",
+  "keywords": [
+    "newman",
+    "reporter",
+    "csv",
+    "postman"
+  ],
+  "scripts": {
+    "pub": "npm publish --access public"
+  },
+  "devDependencies": {
+    "standard": "^14.3.3"
+  }
+}
