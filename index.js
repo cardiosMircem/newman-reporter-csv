@@ -16,7 +16,7 @@ const columns = [
 
 const CSV = {
   stringify: (str) => {
-    return `${str.replace(/"/g, '""')}`;
+    return `"${str.replace(/"/g, '""')}"`;
   },
 };
 

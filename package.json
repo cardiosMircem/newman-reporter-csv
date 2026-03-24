@@ -1,6 +1,6 @@
 {
   "name": "@cardiosmircem/newman-reporter-csv",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CSV reporter for Newman customized for me",
   "main": "index.js",
   "repository": {
