@@ -8,20 +8,15 @@ const columns = [
   "url",
   "status",
   "code",
-  "responseTime",
-  "responseSize",
+  "responseTime_ms",
+  "responseSize_bytes",
   "executed",
-  "failed",
-  "skipped",
   "totalAssertions",
-  "executedCount",
-  "failedCount",
-  "skippedCount",
 ];
 
 const CSV = {
   stringify: (str) => {
-    return `"${str.replace(/"/g, '""')}"`;
+    return `${str.replace(/"/g, '""')}`;
   },
 };
 
@@ -54,18 +49,21 @@ module.exports = function newmanCSVReporter(newman, options) {
       iteration: cursor.iteration + 1,
       requestName: item.name,
       method: request.method,
+      executed: [],
       url: request.url.toString(),
       totalAssertions: 0,
-      executedCount: 0,
-      failedCount: 0,
-      skippedCount: 0,
     });
   });
 
   newman.on("request", (err, e) => {
     if (err || !e.item.name) return;
     const { status, code, responseTime, responseSize, stream } = e.response;
-    Object.assign(log, { status, code, responseTime, responseSize });
+    Object.assign(log, {
+      status,
+      code,
+      responseTime_ms: responseTime,
+      responseSize_bytes: responseSize,
+    });
 
     if (options.includeBody) {
       Object.assign(log, { body: stream.toString() });
@@ -73,14 +71,9 @@ module.exports = function newmanCSVReporter(newman, options) {
   });
 
   newman.on("assertion", (err, e) => {
-    const { assertion } = e;
-    const key = err ? "failed" : e.skipped ? "skipped" : "executed";
-
-    log[key] = log[key] || [];
-    log[key].push(assertion);
-
+    const { assertion } = e; // log[key] = log[key] || [];
+    log.executed.push(assertion);
     log.totalAssertions++;
-    log[`${key}Count`]++;
   });
 
   newman.on("item", (err, e) => {
