@@ -6,10 +6,10 @@ const columns = [
   "requestName",
   "method",
   "url",
-  "status",
-  "code",
-  "responseTime_ms",
-  "responseSize_bytes",
+  // "status",
+  // "code",
+  // "responseTime_ms",
+  // "responseSize_bytes",
   "executed",
   "totalAssertions",
 ];
@@ -57,13 +57,7 @@ module.exports = function newmanCSVReporter(newman, options) {
 
   newman.on("request", (err, e) => {
     if (err || !e.item.name) return;
-    const { status, code, responseTime, responseSize, stream } = e.response;
-    Object.assign(log, {
-      status,
-      code,
-      responseTime_ms: responseTime,
-      responseSize_bytes: responseSize,
-    });
+    const { stream } = e.response;
 
     if (options.includeBody) {
       Object.assign(log, { body: stream.toString() });
@@ -71,7 +65,7 @@ module.exports = function newmanCSVReporter(newman, options) {
   });
 
   newman.on("assertion", (err, e) => {
-    const { assertion } = e; // log[key] = log[key] || [];
+    const { assertion } = e;
     log.executed.push(assertion);
     log.totalAssertions++;
   });
